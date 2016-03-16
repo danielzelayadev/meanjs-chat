@@ -45,3 +45,19 @@ path.public.img = pbl + "img/";
 path.public.js = pbl + "js/";
 path.public.vendor = pbl + "vendor/";
 path.public.views = pbl + "views/";
+
+// DEVELOP SERVER TASKS
+
+gulp.task ( 'server:start', () => {
+	server.listen( { path: 'bin/www' } );
+} );
+
+gulp.task ( 'server:restart', server.restart );
+
+gulp.task ( 'watch', () => {
+	gulp.watch ( 'bin/www', [ 'server:restart' ] );
+	gulp.watch ( 'app.js', [ 'server:restart' ] );
+	gulp.watch ( 'routes/**/*.js', [ 'server:restart' ] );
+} );
+
+gulp.task ( 'default', [ 'server:start', 'watch' ] );
