@@ -48,6 +48,8 @@ path.public.js = pbl + "js/";
 path.public.vendor = pbl + "vendor/";
 path.public.views = pbl + "views/";
 
+let production = util.env.type === 'prod';
+
 // DEVELOP SERVER TASKS
 
 gulp.task ( 'server:start', () => {
@@ -61,6 +63,8 @@ gulp.task ('reload-serverviews', () => {
 		.pipe ( livereload() );
 } );
 
+// JS TASKS
+
 gulp.task ( 'app', () => {
 	return gulp.src ( path.dev.app.root + '*.js' )
 		.pipe( babel(
@@ -69,8 +73,8 @@ gulp.task ( 'app', () => {
 			}
 		) )
 		.pipe( concat('app.bundle.js') )
-		.pipe( util.env.type === 'prod' ? stripDebug() : util.noop() )
-		.pipe( util.env.type === 'prod' ? uglify() : util.noop() )
+		.pipe( production ? stripDebug() : util.noop() )
+		.pipe( production ? uglify() : util.noop() )
 		.pipe( gulp.dest(path.public.js) )
 		.pipe( livereload() );
 } );
@@ -83,8 +87,8 @@ gulp.task ( 'components', () => {
 			}
 		) )
 		.pipe( concat('components.bundle.js') )
-		.pipe( util.env.type === 'prod' ? stripDebug() : util.noop() )
-		.pipe( util.env.type === 'prod' ? uglify() : util.noop() )
+		.pipe( production ? stripDebug() : util.noop() )
+		.pipe( production ? uglify() : util.noop() )
 		.pipe( gulp.dest(path.public.js) )
 		.pipe( livereload() );
 } );;
@@ -97,8 +101,8 @@ gulp.task ( 'shared', () => {
 			}
 		) )
 		.pipe( concat('shared.bundle.js') )
-		.pipe( util.env.type === 'prod' ? stripDebug() : util.noop() )
-		.pipe( util.env.type === 'prod' ? uglify() : util.noop() )
+		.pipe( production ? stripDebug() : util.noop() )
+		.pipe( production ? uglify() : util.noop() )
 		.pipe( gulp.dest(path.public.js) )
 		.pipe( livereload() );
 } );;
@@ -111,16 +115,41 @@ gulp.task ( 'services', () => {
 			}
 		) )
 		.pipe( concat('services.bundle.js') )
-		.pipe( util.env.type === 'prod' ? stripDebug() : util.noop() )
-		.pipe( util.env.type === 'prod' ? uglify() : util.noop() )
+		.pipe( production ? stripDebug() : util.noop() )
+		.pipe( production ? uglify() : util.noop() )
 		.pipe( gulp.dest(path.public.js) )
 		.pipe( livereload() );
 } );;
+
+// CSS TASKS
+
+gulp.task ( 'css', () => {
+	return gulp.src ( [ path.dev.app.components + "**/*.scss",
+		path.dev.app.shared + "**/*.scss" ] )
+		.pipe( sass() )
+		.pipe( concat('style.css') )
+		.pipe( csso (
+			{
+	            restructure: production,
+	            sourceMap: !production,
+	            debug: !production
+        	}
+        ))
+		.pipe( production ? util.noop() : csscomb() )
+		.pipe( gulp.dest(path.public.css) )
+		.pipe( livereload() );
+} );
 
 gulp.task ( 'watch', () => {
 	livereload.listen();
 
 	gulp.watch ( path.dev.app.root + '*.js', [ 'app' ] );
+	gulp.watch ( path.dev.app.components + '**/*.js', [ 'components' ] );
+	gulp.watch ( path.dev.app.shared + '**/*.js', [ 'shared' ] );
+	gulp.watch ( path.dev.app.services + '**/*.js', [ 'services' ] );
+
+	gulp.watch ( [ path.dev.app.components + "**/*.scss", 
+				   path.dev.app.shared + "**/*.scss" ], [ 'css' ] );
 
 	gulp.watch ( path.views + '**/*.ejs', [ 'reload-serverviews' ] );
 
