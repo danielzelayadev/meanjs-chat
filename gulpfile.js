@@ -1,22 +1,22 @@
 'use strict';
 
-let gulp       = require('gulp'),
-	babel      = require('gulp-babel'),
-	clean      = require('gulp-clean'),
-	concat     = require('gulp-concat'),
-	copy       = require('gulp-copy'),
-	csscomb    = require('gulp-csscomb'),
-	csso       = require('gulp-csso'),
-	htmlhint   = require('gulp-htmlhint'),
-	htmlmin    = require('gulp-htmlmin'),
-	imagemin   = require('gulp-imagemin'),
-	server     = require('gulp-develop-server'),
-	livereload = require('gulp-livereload'),
-	sass       = require('gulp-sass'),
-	debug      = require('gulp-strip-debug'),
-	uglify     = require('gulp-uglify'),
-	uncss      = require('gulp-uncss'),
-	util        = require('gulp-util');
+let gulp            = require('gulp'),
+	babel           = require('gulp-babel'),
+	clean           = require('gulp-clean'),
+	concat          = require('gulp-concat'),
+	copy            = require('gulp-copy'),
+	csscomb         = require('gulp-csscomb'),
+	csso            = require('gulp-csso'),
+	htmlhint        = require('gulp-htmlhint'),
+	htmlmin         = require('gulp-htmlmin'),
+	imagemin        = require('gulp-imagemin'),
+	server          = require('gulp-develop-server'),
+	livereload      = require('gulp-livereload'),
+	sass            = require('gulp-sass'),
+	stripDebug      = require('gulp-strip-debug'),
+	uglify          = require('gulp-uglify'),
+	uncss           = require('gulp-uncss'),
+	util            = require('gulp-util');
 
 let path = {};
 
@@ -57,12 +57,28 @@ gulp.task ( 'server:start', () => {
 gulp.task ( 'server:restart', server.restart );
 
 gulp.task ('reload-serverviews', () => {
-	return gulp.src( path.views + '**/*.ejs' )
+	return gulp.src ( path.views + '**/*.ejs' )
+		.pipe ( livereload() );
+} );
+
+gulp.task ( 'app', () => {
+	return gulp.src ( path.dev.app.root + '*.js' )
+		.pipe( babel(
+			{
+				presets: [ 'es2015' ] 
+			}
+		) )
+		.pipe( concat('app.bundle.js') )
+		.pipe( util.env.type === 'prod' ? stripDebug() : util.noop() )
+		.pipe( util.env.type === 'prod' ? uglify() : util.noop() )
+		.pipe( gulp.dest(path.public.js) )
 		.pipe( livereload() );
 } );
 
 gulp.task ( 'watch', () => {
 	livereload.listen();
+
+	gulp.watch ( path.dev.app.root + '*.js', [ 'app' ] );
 
 	gulp.watch ( path.views + '**/*.ejs', [ 'reload-serverviews' ] );
 
