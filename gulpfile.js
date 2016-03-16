@@ -75,6 +75,48 @@ gulp.task ( 'app', () => {
 		.pipe( livereload() );
 } );
 
+gulp.task ( 'components', () => {
+	return gulp.src ( path.dev.app.components + '**/*.js' )
+		.pipe( babel(
+			{
+				presets: [ 'es2015' ] 
+			}
+		) )
+		.pipe( concat('components.bundle.js') )
+		.pipe( util.env.type === 'prod' ? stripDebug() : util.noop() )
+		.pipe( util.env.type === 'prod' ? uglify() : util.noop() )
+		.pipe( gulp.dest(path.public.js) )
+		.pipe( livereload() );
+} );;
+
+gulp.task ( 'shared', () => {
+	return gulp.src ( path.dev.app.shared + '**/*.js' )
+		.pipe( babel(
+			{
+				presets: [ 'es2015' ] 
+			}
+		) )
+		.pipe( concat('shared.bundle.js') )
+		.pipe( util.env.type === 'prod' ? stripDebug() : util.noop() )
+		.pipe( util.env.type === 'prod' ? uglify() : util.noop() )
+		.pipe( gulp.dest(path.public.js) )
+		.pipe( livereload() );
+} );;
+
+gulp.task ( 'services', () => {
+	return gulp.src ( path.dev.app.services + '**/*.js' )
+		.pipe( babel(
+			{
+				presets: [ 'es2015' ] 
+			}
+		) )
+		.pipe( concat('services.bundle.js') )
+		.pipe( util.env.type === 'prod' ? stripDebug() : util.noop() )
+		.pipe( util.env.type === 'prod' ? uglify() : util.noop() )
+		.pipe( gulp.dest(path.public.js) )
+		.pipe( livereload() );
+} );;
+
 gulp.task ( 'watch', () => {
 	livereload.listen();
 
