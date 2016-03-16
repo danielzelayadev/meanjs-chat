@@ -24,6 +24,7 @@ path.dev = {};
 path.dev.app = {};
 path.dev.assets = {};
 path.public = {};
+path.server = [ 'bin/www', 'app.js', 'routes/**/*.js' ];
 
 let app = "dev/app/";
 path.dev.app.root = app;
@@ -55,9 +56,7 @@ gulp.task ( 'server:start', () => {
 gulp.task ( 'server:restart', server.restart );
 
 gulp.task ( 'watch', () => {
-	gulp.watch ( 'bin/www', [ 'server:restart' ] );
-	gulp.watch ( 'app.js', [ 'server:restart' ] );
-	gulp.watch ( 'routes/**/*.js', [ 'server:restart' ] );
+	gulp.watch ( path.server, [ 'server:restart' ] );
 } );
 
 gulp.task ( 'default', [ 'server:start', 'watch' ] );
