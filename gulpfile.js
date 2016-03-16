@@ -21,25 +21,27 @@ let gulp       = require('gulp'),
 let path = {};
 
 path.dev = {};
+path.dev.app = {};
+path.dev.assets = {};
 path.public = {};
 
-let dev = "dev/";
+let app = "dev/app/";
+path.dev.app.root = app;
+path.dev.app.components = app + "components/";
+path.dev.app.services = app + "services/";
+path.dev.app.shared = app + "shared/";
 
-path.dev.app = dev + "app/";
-path.dev.app.components = path.dev.app + "components/";
-path.dev.app.services = path.dev.app + "services/";
-path.dev.app.shared = path.dev.app + "shared/";
+let assets = "dev/assets/";
+path.dev.assets.root = assets;
+path.dev.assets.fonts = assets + "fonts/";
+path.dev.assets.img = assets + "img/";
+path.dev.assets.vendor = assets + "vendor/";
 
-path.dev.assets = dev + "assets/";
-path.dev.assets.fonts = path.dev.assets + "fonts/";
-path.dev.assets.img = path.dev.assets + "img/";
-path.dev.assets.vendor = path.dev.assets + "vendor/";
+let pbl = "public/";
 
-let public = "public/";
-
-path.public.css = public + "css/";
-path.public.fonts = public + "fonts/";
-path.public.img = public + "img/";
-path.public.js = public + "js/";
-path.public.vendor = public + "vendor/";
-path.public.views = public + "views/";
+path.public.css = pbl + "css/";
+path.public.fonts = pbl + "fonts/";
+path.public.img = pbl + "img/";
+path.public.js = pbl + "js/";
+path.public.vendor = pbl + "vendor/";
+path.public.views = pbl + "views/";
