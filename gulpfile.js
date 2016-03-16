@@ -25,6 +25,7 @@ path.dev.app = {};
 path.dev.assets = {};
 path.public = {};
 path.server = [ 'bin/www', 'app.js', 'routes/**/*.js' ];
+path.views = "views/";
 
 let app = "dev/app/";
 path.dev.app.root = app;
@@ -55,7 +56,16 @@ gulp.task ( 'server:start', () => {
 
 gulp.task ( 'server:restart', server.restart );
 
+gulp.task ('reload-serverviews', () => {
+	return gulp.src( path.views + '**/*.ejs' )
+		.pipe( livereload() );
+} );
+
 gulp.task ( 'watch', () => {
+	livereload.listen();
+
+	gulp.watch ( path.views + '**/*.ejs', [ 'reload-serverviews' ] );
+
 	gulp.watch ( path.server, [ 'server:restart' ] );
 } );
 
