@@ -1,6 +1,7 @@
 'use strict';
 
 let gulp            = require('gulp'),
+	autoprefixer    = require('gulp-autoprefixer');
 	babel           = require('gulp-babel'),
 	clean           = require('gulp-clean'),
 	concat          = require('gulp-concat'),
@@ -137,6 +138,7 @@ gulp.task ( 'css', () => {
         	}
         ))
 		.pipe( production ? util.noop() : csscomb() )
+		.pipe( autoprefixer() )
 		.pipe( gulp.dest(path.public.css) )
 		.pipe( livereload() );
 } );
