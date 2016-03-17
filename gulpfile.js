@@ -47,6 +47,7 @@ path.public.img = pbl + "img/";
 path.public.js = pbl + "js/";
 path.public.vendor = pbl + "vendor/";
 path.public.views = pbl + "views/";
+path.public.templates = pbl + "templates/";
 
 let production = util.env.type === 'prod';
 
@@ -140,6 +141,24 @@ gulp.task ( 'css', () => {
 		.pipe( livereload() );
 } );
 
+// HTML TASKS
+
+gulp.task ( 'views', () => {
+	return gulp.src( path.dev.app.components + "**/*.html" )
+		.pipe( htmlmin( { collapseWhitespace: true } ) )
+		.pipe( htmlhint() )
+		.pipe( gulp.dest( path.public.views ) )
+		.pipe( livereload() );
+} );
+
+gulp.task ( 'templates', () => {
+	return gulp.src( path.dev.app.shared + "**/*.html" )
+		.pipe( htmlmin( { collapseWhitespace: true } ) )
+		.pipe( htmlhint() )
+		.pipe( gulp.dest( path.public.templates ) )
+		.pipe( livereload() );
+} );
+
 gulp.task ( 'watch', () => {
 	livereload.listen();
 
@@ -150,6 +169,9 @@ gulp.task ( 'watch', () => {
 
 	gulp.watch ( [ path.dev.app.components + "**/*.scss", 
 				   path.dev.app.shared + "**/*.scss" ], [ 'css' ] );
+
+	gulp.watch ( path.dev.app.components + "**/*.html", [ 'views' ] );
+	gulp.watch ( path.dev.app.shared + "**/*.html", [ 'templates' ] );
 
 	gulp.watch ( path.views + '**/*.ejs', [ 'reload-serverviews' ] );
 
