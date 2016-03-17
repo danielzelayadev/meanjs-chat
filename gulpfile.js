@@ -159,6 +159,18 @@ gulp.task ( 'templates', () => {
 		.pipe( livereload() );
 } );
 
+// ASSETS TASKS
+
+gulp.task ( 'img', () => {
+	return gulp.src( path.dev.assets.img + "*.*" )
+		.pipe( imagemin(
+		{
+			progressive: true
+		})
+		.pipe( gulp.dest( path.public.img ) )
+		.pipe( livereload() );
+} );
+
 gulp.task ( 'watch', () => {
 	livereload.listen();
 
