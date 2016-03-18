@@ -2,6 +2,7 @@
 
 let gulp            = require('gulp'),
 	autoprefixer    = require('gulp-autoprefixer'),
+	browserify      = require('browserify'),
 	babel           = require('gulp-babel'),
 	clean           = require('gulp-clean'),
 	concat          = require('gulp-concat'),
@@ -14,6 +15,7 @@ let gulp            = require('gulp'),
 	server          = require('gulp-develop-server'),
 	livereload      = require('gulp-livereload'),
 	sass            = require('gulp-sass'),
+	source          = require('vinyl-source-stream'),
 	stripDebug      = require('gulp-strip-debug'),
 	uglify          = require('gulp-uglify'),
 	uncss           = require('gulp-uncss'),
@@ -121,7 +123,35 @@ gulp.task ( 'services', () => {
 		.pipe( production ? uglify() : util.noop() )
 		.pipe( gulp.dest(path.public.js) )
 		.pipe( livereload() );
-} );;
+} );
+
+gulp.task ('browserify-app', () => {
+    return browserify( path.public.js + "app.bundle.js" )
+        .bundle()
+        .pipe( source ( 'app.bundle.js' ) )
+        .pipe( gulp.dest( path.public.js ) );
+});
+
+gulp.task ('browserify-components', () => {
+    return browserify( path.public.js + "components.bundle.js" )
+        .bundle()
+        .pipe( source ( 'components.bundle.js' ) )
+        .pipe( gulp.dest( path.public.js ) );
+});
+
+gulp.task ('browserify-shared', () => {
+    return browserify( path.public.js + "shared.bundle.js" )
+        .bundle()
+        .pipe( source ( 'shared.bundle.js' ) )
+        .pipe( gulp.dest( path.public.js ) );
+});
+
+gulp.task ('browserify-services', () => {
+    return browserify( path.public.js + "services.bundle.js" )
+        .bundle()
+        .pipe( source ( 'services.bundle.js' ) )
+        .pipe( gulp.dest( path.public.js ) );
+});
 
 // CSS TASKS
 
@@ -165,10 +195,7 @@ gulp.task ( 'templates', () => {
 
 gulp.task ( 'img', () => {
 	return gulp.src( path.dev.assets.img + "*.*" )
-		.pipe( imagemin(
-		{
-			progressive: true
-		}))
+		.pipe( imagemin() )
 		.pipe( gulp.dest( path.public.img ) )
 		.pipe( livereload() );
 } );
@@ -176,10 +203,10 @@ gulp.task ( 'img', () => {
 gulp.task ( 'watch', () => {
 	livereload.listen();
 
-	gulp.watch ( path.dev.app.root + '*.js', [ 'app' ] );
-	gulp.watch ( path.dev.app.components + '**/*.js', [ 'components' ] );
-	gulp.watch ( path.dev.app.shared + '**/*.js', [ 'shared' ] );
-	gulp.watch ( path.dev.app.services + '**/*.js', [ 'services' ] );
+	gulp.watch ( path.dev.app.root + '*.js', [ 'app', 'browserify-app' ] );
+	gulp.watch ( path.dev.app.components + '**/*.js', [ 'components', 'browserify-components' ] );
+	gulp.watch ( path.dev.app.shared + '**/*.js', [ 'shared', 'browserify-shared' ] );
+	gulp.watch ( path.dev.app.services + '**/*.js', [ 'services', 'browserify-services' ] );
 
 	gulp.watch ( [ path.dev.app.components + "**/*.scss", 
 				   path.dev.app.shared + "**/*.scss" ], [ 'css' ] );
