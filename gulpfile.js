@@ -1,13 +1,14 @@
 'use strict';
 
+/////////////////////////////////////////////////////////////////////////
+//						PLUGINS & MODULES							   //
+/////////////////////////////////////////////////////////////////////////
+
+
 let gulp            = require('gulp'),
 	autoprefixer    = require('gulp-autoprefixer'),
-	browserify      = require('browserify'),
 	babel           = require('gulp-babel'),
-	buffer          = require('vinyl-buffer'),
-	clean           = require('gulp-clean'),
 	concat          = require('gulp-concat'),
-	copy            = require('gulp-copy'),
 	csscomb         = require('gulp-csscomb'),
 	csso            = require('gulp-csso'),
 	htmlhint        = require('gulp-htmlhint'),
@@ -16,12 +17,15 @@ let gulp            = require('gulp'),
 	server          = require('gulp-develop-server'),
 	livereload      = require('gulp-livereload'),
 	sass            = require('gulp-sass'),
-	source          = require('vinyl-source-stream'),
 	stripDebug      = require('gulp-strip-debug'),
-	transform       = require('vinyl-transform'),
 	uglify          = require('gulp-uglify'),
-	uncss           = require('gulp-uncss'),
 	util            = require('gulp-util');
+
+
+/////////////////////////////////////////////////////////////////////////
+//							     PATH								   //
+/////////////////////////////////////////////////////////////////////////
+
 
 let path = {};
 
@@ -56,7 +60,12 @@ path.public.templates = pbl + "templates/";
 
 let production = util.env.type === 'prod';
 
-// DEVELOP SERVER TASKS
+
+/////////////////////////////////////////////////////////////////////////
+//							SERVER TASKS							   //
+/////////////////////////////////////////////////////////////////////////
+
+
 
 gulp.task ( 'server:start', () => {
 	server.listen( { path: 'bin/www' } );
@@ -69,31 +78,32 @@ gulp.task ('reload-serverviews', () => {
 		.pipe ( livereload() );
 } );
 
-// JS TASKS
+
+
+/////////////////////////////////////////////////////////////////////////
+//							JS TASKS								   //
+/////////////////////////////////////////////////////////////////////////
+
 
 gulp.task ( 'js', () => {
-	return gulp.src ( [ path.dev.app.root + '*.js', path.dev.app.components + '**/*.js', 
-						path.dev.app.shared + '**/*.js', path.dev.app.services + '**/*.js' ] )
+	return gulp.src( [ path.dev.app + "*.js", path.dev.app + "**/**/*.js" ] )
 		.pipe( babel(
 			{
 				presets: [ 'es2015' ] 
 			}
 		) )
-		.pipe( concat('bundle.js') )
+		.pipe( concat( 'bundle.js' ) )
 		.pipe( production ? stripDebug() : util.noop() )
 		.pipe( production ? uglify() : util.noop() )
 		.pipe( gulp.dest(path.public.js) )
 		.pipe( livereload() );
 } );
 
-gulp.task ('browserify', () => {
-    return browserify( path.public.js + "bundle.js" )
-        .bundle()
-        .pipe( source ( 'bundle.js' ) )
-        .pipe( gulp.dest( path.public.js ) );
-});
 
-// CSS TASKS
+/////////////////////////////////////////////////////////////////////////
+//							CSS TASKS								   //
+/////////////////////////////////////////////////////////////////////////
+
 
 gulp.task ( 'css', () => {
 	return gulp.src ( [ path.dev.app.components + "**/*.scss",
@@ -113,7 +123,11 @@ gulp.task ( 'css', () => {
 		.pipe( livereload() );
 } );
 
-// HTML TASKS
+
+/////////////////////////////////////////////////////////////////////////
+//							HTML TASKS								   //
+/////////////////////////////////////////////////////////////////////////
+
 
 gulp.task ( 'views', () => {
 	return gulp.src( path.dev.app.components + "**/*.html" )
@@ -131,7 +145,11 @@ gulp.task ( 'templates', () => {
 		.pipe( livereload() );
 } );
 
-// ASSETS TASKS
+/////////////////////////////////////////////////////////////////////////
+//							ASSETS TASKS							   //
+/////////////////////////////////////////////////////////////////////////
+
+
 
 gulp.task ( 'img', () => {
 	return gulp.src( path.dev.assets.img + "*.*" )
@@ -140,11 +158,18 @@ gulp.task ( 'img', () => {
 		.pipe( livereload() );
 } );
 
+
+
+/////////////////////////////////////////////////////////////////////////
+//							WATCH								       //
+/////////////////////////////////////////////////////////////////////////
+
+
+
 gulp.task ( 'watch', () => {
 	livereload.listen();
 
-	gulp.watch ( [ path.dev.app.root + '*.js', path.dev.app.components + '**/*.js', 
-				   path.dev.app.shared + '**/*.js', path.dev.app.services + '**/*.js' ], [ 'js', 'browserify' ] );
+	gulp.watch ( [ path.dev.app + "*.js", path.dev.app + "**/**/*.js" ], [ 'js' ] );
 
 	gulp.watch ( [ path.dev.app.components + "**/*.scss", 
 				   path.dev.app.shared + "**/*.scss" ], [ 'css' ] );
@@ -156,5 +181,12 @@ gulp.task ( 'watch', () => {
 
 	gulp.watch ( path.server, [ 'server:restart' ] );
 } );
+
+
+
+/////////////////////////////////////////////////////////////////////////
+//							  DEFAULT								   //
+/////////////////////////////////////////////////////////////////////////
+
 
 gulp.task ( 'default', [ 'server:start', 'watch' ] );
