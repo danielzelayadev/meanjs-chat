@@ -8,6 +8,8 @@
 let gulp            = require('gulp'),
 	autoprefixer    = require('gulp-autoprefixer'),
 	babel           = require('gulp-babel'),
+	browserify      = require('browserify'),
+	clean           = require('gulp-clean'),
 	concat          = require('gulp-concat'),
 	csscomb         = require('gulp-csscomb'),
 	csso            = require('gulp-csso'),
@@ -17,6 +19,7 @@ let gulp            = require('gulp'),
 	server          = require('gulp-develop-server'),
 	livereload      = require('gulp-livereload'),
 	sass            = require('gulp-sass'),
+	source          = require('vinyl-source-stream'),
 	stripDebug      = require('gulp-strip-debug'),
 	uglify          = require('gulp-uglify'),
 	util            = require('gulp-util');
@@ -86,17 +89,28 @@ gulp.task ('reload-serverviews', () => {
 
 
 gulp.task ( 'js', () => {
-	return gulp.src( [ path.dev.app + "*.js", path.dev.app + "**/**/*.js" ] )
+	return gulp.src( [ path.dev.app.root + "*.js", path.dev.app.root + "**/**/*.js" ] )
 		.pipe( babel(
 			{
 				presets: [ 'es2015' ] 
 			}
 		) )
-		.pipe( concat( 'bundle.js' ) )
 		.pipe( production ? stripDebug() : util.noop() )
+		.pipe( gulp.dest(path.public.js + 'temp/') );
+} );
+
+gulp.task ( 'browserify', [ 'js' ], () => {
+	return browserify (path.public.js + 'temp/app.module.js')
+		.bundle()
+		.pipe( source( 'bundle.js' ) )
 		.pipe( production ? uglify() : util.noop() )
 		.pipe( gulp.dest(path.public.js) )
 		.pipe( livereload() );
+} );
+
+gulp.task ( 'clean-temp', ['js', 'browserify'], () => {
+	return gulp.src( path.public.js + 'temp/', { read: false } )
+		.pipe( clean() );
 } );
 
 
@@ -169,7 +183,8 @@ gulp.task ( 'img', () => {
 gulp.task ( 'watch', () => {
 	livereload.listen();
 
-	gulp.watch ( [ path.dev.app + "*.js", path.dev.app + "**/**/*.js" ], [ 'js' ] );
+	gulp.watch ( [ path.dev.app.root + "*.js", path.dev.app.root + "**/**/*.js" ], 
+		[ 'clean-temp' ] );
 
 	gulp.watch ( [ path.dev.app.components + "**/*.scss", 
 				   path.dev.app.shared + "**/*.scss" ], [ 'css' ] );
