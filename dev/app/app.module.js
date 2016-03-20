@@ -1,8 +1,6 @@
-(() => {
+import * as angular from "angular";
+import * as routes from "angular-ui-router";
+import { config } from "./config";
 
-	let angular = require('angular');
-				  require('angular-ui-router');
-
-	angular.module('MEANChat', ['ui.router']);
-
-})();
+angular.module('MEANChat', ['ui.router'])
+	.config(config);
