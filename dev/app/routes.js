@@ -5,7 +5,10 @@ let routes = (stateProvider, urlRouterProvider) => {
 			.state ('Home', {
 				url: '/',
 				templateUrl: '../views/home/home.html',
-				controller: 'HomeController as vm'
+				controller: 'HomeController as vm',
+				onEnter: [ '$rootScope', 
+						  ($rootScope) => { $rootScope.stateStyle = 'home'; } 
+						 ]
 			});
 };
 
