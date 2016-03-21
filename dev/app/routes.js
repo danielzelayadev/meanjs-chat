@@ -4,7 +4,8 @@ let routes = (stateProvider, urlRouterProvider) => {
 		stateProvider
 			.state ('Home', {
 				url: '/',
-				template: '<h1>Home</h1>'
+				templateUrl: '../views/home/home.html',
+				controller: 'HomeController as vm'
 			});
 };
 
