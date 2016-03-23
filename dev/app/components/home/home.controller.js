@@ -1,3 +1,6 @@
+import * as io from 'socket.io-client'; 
+
+let socket = io.connect();
 let scope = {};
 let me = { username: 'Daniel ZY' };
 
