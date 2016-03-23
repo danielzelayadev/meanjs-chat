@@ -6,7 +6,7 @@
 	<div class="right-wing">
 		<div class="header right"></div>
 		<div class="body chat">
-			<div class="message" ng-class="vm.messageNotMine(message) ? 'right' : 'left'" ng-repeat="message in vm.messages">
+			<div class="message" ng-class="vm.messageIsMine(message) ? 'right' : 'left'" ng-repeat="message in vm.messages">
 				<span class="sender">{{message.sender.username}}</span>
 				<p class="mbody">{{message.content}}</p>
 			</div>

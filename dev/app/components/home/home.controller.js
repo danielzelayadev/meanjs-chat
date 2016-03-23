@@ -2,25 +2,36 @@ import * as io from 'socket.io-client';
 
 let socket = io.connect();
 let scope = {};
-let me = { username: 'Daniel ZY' };
+let session = { username: prompt('Enter your username:', 'Harry Potter') };
 
 class HomeController {
 	constructor ($scope) {
 		this.messages = [];
 		scope = $scope;
+
+		socket.on('message', message => {
+			this.messages.push({
+				content: message.content,
+				sender: { username: message.sender.username }
+			});
+		});
 	}
 
 	sendMessage (message) {
-		this.messages.push({
+		let messageObj = {
 			content: message,
-			sender: { username: me.username }
-		});
+			sender: { username: session.username }
+		};
+
+		this.messages.push(messageObj);
+
+		socket.emit('message', messageObj);
 
 		scope.message = "";
 	}
 
-	messageNotMine (message) {
-		return message.sender.username === me.username;
+	messageIsMine (message) {
+		return message.sender.username === session.username;
 	}
 }
 
