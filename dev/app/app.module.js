@@ -1,5 +1,6 @@
 import * as angular from "angular";
 import * as routes from "angular-ui-router";
+import * as jquery from "jquery";
 import * as controllers from "./controllers.module";
 import * as directives from "./directives.module";
 import { config } from "./config";
