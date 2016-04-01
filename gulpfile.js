@@ -6,23 +6,23 @@
 
 
 let gulp            = require('gulp'),
-	autoprefixer    = require('gulp-autoprefixer'),
-	babel           = require('gulp-babel'),
-	browserify      = require('browserify'),
-	clean           = require('gulp-clean'),
-	concat          = require('gulp-concat'),
-	csscomb         = require('gulp-csscomb'),
-	csso            = require('gulp-csso'),
-	htmlhint        = require('gulp-htmlhint'),
-	htmlmin         = require('gulp-htmlmin'),
-	imagemin        = require('gulp-imagemin'),
-	server          = require('gulp-develop-server'),
-	livereload      = require('gulp-livereload'),
-	sass            = require('gulp-sass'),
-	source          = require('vinyl-source-stream'),
-	stripDebug      = require('gulp-strip-debug'),
-	uglify          = require('gulp-uglify'),
-	util            = require('gulp-util');
+    autoprefixer    = require('gulp-autoprefixer'),
+    babel           = require('gulp-babel'),
+    browserify      = require('browserify'),
+    clean           = require('gulp-clean'),
+    concat          = require('gulp-concat'),
+    csscomb         = require('gulp-csscomb'),
+    csso            = require('gulp-csso'),
+    htmlhint        = require('gulp-htmlhint'),
+    htmlmin         = require('gulp-htmlmin'),
+    imagemin        = require('gulp-imagemin'),
+    server          = require('gulp-develop-server'),
+    livereload      = require('gulp-livereload'),
+    sass            = require('gulp-sass'),
+    source          = require('vinyl-source-stream'),
+    stripDebug      = require('gulp-strip-debug'),
+    uglify          = require('gulp-uglify'),
+    util            = require('gulp-util');
 
 
 /////////////////////////////////////////////////////////////////////////
