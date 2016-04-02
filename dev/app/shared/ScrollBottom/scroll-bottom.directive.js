@@ -1,10 +1,18 @@
+import $ from "jquery";
+
 function ScrollBottom () {
 	return {
-		restrict: 'E',
-		template: '<h1>LOOOL</h1>',
-		scope: { scrollBottom: '=' },
+		restrict: 'A',
+		scope: { scrollbottom: '=scrollbottom' },
 		link: (scope, element, attrs) => {
-			console.log(scope);
+			scope.$watch('scrollbottom', (newValue, oldValue) => {
+				if (scope.scrollbottom === true) {
+		            let $chatBody = $('.body.chat');
+
+					$chatBody.scrollTop($chatBody[0].scrollHeight);
+					scope.scrollbottom = false;
+		        }
+	        });
     	}
     };
 }

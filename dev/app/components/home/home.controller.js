@@ -3,17 +3,22 @@ import * as io from 'socket.io-client';
 let socket = io.connect();
 let scope = {};
 let session = { username: prompt('Enter your username:', 'Harry Potter') };
+let timeout = {};
 
 class HomeController {
-	constructor ($scope) {
+	constructor ($scope, $timeout) {
 		this.messages = [];
+		timeout = $timeout;
 		scope = $scope;
+		scope.scrollBottom = false;
 
 		socket.on('message', message => {
 			this.messages.push({
 				content: message.content,
 				sender: { username: message.sender.username }
 			});
+			
+			$scope.$apply();
 		});
 	}
 
@@ -28,6 +33,8 @@ class HomeController {
 		socket.emit('message', messageObj);
 
 		scope.message = "";
+		
+		timeout(() => { scope.scrollBottom = true; }, 1);
 	}
 
 	messageIsMine (message) {
@@ -35,6 +42,6 @@ class HomeController {
 	}
 }
 
-HomeController.$inject = [ '$scope' ];
+HomeController.$inject = [ '$scope', '$timeout' ];
 
 export default HomeController;
