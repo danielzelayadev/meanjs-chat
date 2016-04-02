@@ -11,13 +11,19 @@ class HomeController {
 		timeout = $timeout;
 		scope = $scope;
 		scope.scrollBottom = false;
-		console.log($notification);
+
 		socket.on('message', message => {
 			this.messages.push({
 				content: message.content,
 				sender: { username: message.sender.username }
 			});
-			
+
+			$notification(message.sender.username, {
+		    	body: message.content,
+		    	icon: '../img/temp-noti.jpg',
+		    	delay: 1500,
+		    	focusWindowOnClick: true
+			});
 			$scope.$apply();
 		});
 	}
