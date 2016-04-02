@@ -1,4 +1,4 @@
-import * as io from 'socket.io-client'; 
+import * as io from 'socket.io-client';
 
 let socket = io.connect();
 let scope = {};
@@ -6,12 +6,12 @@ let session = { username: prompt('Enter your username:', 'Harry Potter') };
 let timeout = {};
 
 class HomeController {
-	constructor ($scope, $timeout) {
+	constructor ($scope, $timeout, $notification) {
 		this.messages = [];
 		timeout = $timeout;
 		scope = $scope;
 		scope.scrollBottom = false;
-
+		console.log($notification);
 		socket.on('message', message => {
 			this.messages.push({
 				content: message.content,
@@ -42,6 +42,6 @@ class HomeController {
 	}
 }
 
-HomeController.$inject = [ '$scope', '$timeout' ];
+HomeController.$inject = [ '$scope', '$timeout', '$notification' ];
 
 export default HomeController;
