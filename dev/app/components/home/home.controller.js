@@ -36,6 +36,8 @@ class HomeController {
 	}
 
 	sendMessage (message) {
+		if (message.length === 0) return;
+		
 		let messageObj = {
 			content: message,
 			sender: { username: session.username }
