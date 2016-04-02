@@ -6,7 +6,7 @@ let session = { username: prompt('Enter your username:', 'Harry Potter') };
 let timeout = {};
 
 class HomeController {
-	constructor ($scope, $timeout, $notification) {
+	constructor ($rootScope, $scope, $timeout, $notification) {
 		this.messages = [];
 		timeout = $timeout;
 		scope = $scope;
@@ -24,6 +24,13 @@ class HomeController {
 		    	delay: 1500,
 		    	focusWindowOnClick: true
 			});
+
+			$rootScope.title = `Message from ${message.sender.username}!`; 
+
+			$timeout( () => { 
+				$rootScope.title = "MEANChat | Welcome to MEANChat!"; 
+			}, 500); 
+
 			$scope.$apply();
 		});
 	}
@@ -48,6 +55,7 @@ class HomeController {
 	}
 }
 
-HomeController.$inject = [ '$scope', '$timeout', '$notification' ];
+HomeController.$inject = [ '$rootScope', '$scope', 
+						   '$timeout', '$notification' ];
 
 export default HomeController;
