@@ -1,4 +1,5 @@
 import * as io from 'socket.io-client';
+import $ from "jquery";
 
 let socket = io.connect();
 let scope = {};
@@ -6,7 +7,7 @@ let session = { username: prompt('Enter your username:', 'Harry Potter') };
 let timeout = {};
 
 class HomeController {
-	constructor ($rootScope, $scope, $timeout, $notification) {
+	constructor ($rootScope, $scope, $window, $timeout, $notification) {
 		this.messages = [];
 		timeout = $timeout;
 		scope = $scope;
@@ -18,18 +19,21 @@ class HomeController {
 				sender: { username: message.sender.username }
 			});
 
-			$notification(message.sender.username, {
-		    	body: message.content,
-		    	icon: '../img/temp-noti.jpg',
-		    	delay: 1500,
-		    	focusWindowOnClick: true
-			});
+			if (!$(window).is(':focus')) {
+				console.log(session.username);
+				$notification(message.sender.username, {
+			    	body: message.content,
+			    	icon: '../img/temp-noti.jpg',
+			    	delay: 1500,
+			    	focusWindowOnClick: true
+				});
 
-			$rootScope.title = `Message from ${message.sender.username}!`; 
+				$rootScope.title = `Message from ${message.sender.username}!`; 
 
-			$timeout( () => { 
-				$rootScope.title = "MEANChat | Welcome to MEANChat!"; 
-			}, 500); 
+				$timeout( () => { 
+					$rootScope.title = "MEANChat | Welcome to MEANChat!"; 
+				}, 1000);
+			}
 
 			$scope.$apply();
 		});
@@ -37,7 +41,7 @@ class HomeController {
 
 	sendMessage (message) {
 		if (message.length === 0) return;
-		
+
 		let messageObj = {
 			content: message,
 			sender: { username: session.username }
@@ -57,7 +61,7 @@ class HomeController {
 	}
 }
 
-HomeController.$inject = [ '$rootScope', '$scope', 
+HomeController.$inject = [ '$rootScope', '$scope', '$window',
 						   '$timeout', '$notification' ];
 
 export default HomeController;
