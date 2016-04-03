@@ -6,6 +6,8 @@ let session = { username: prompt('Enter your username:', 'Harry Potter') };
 let timeout = {};
 let rs = {};
 
+let notiSfx = new Audio('../sfx/temp-noti.mp3');
+
 class HomeController {
 	constructor ($rootScope, $scope, $timeout, $notification) {
 		this.messages = [];
@@ -27,6 +29,7 @@ class HomeController {
 			    	delay: 1500,
 			    	focusWindowOnClick: true
 				});
+				notiSfx.play();
 
 				rs.title = `Message from ${message.sender.username}!`; 
 
