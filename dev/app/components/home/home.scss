@@ -1,0 +1,135 @@
+
+$mainColor: #29263C;
+$headerColor: #fff;
+$wingColor: #ccc;
+
+$leftWing_Width: 35%;
+$rightWing_Width: 100% - $leftWing_Width;
+$rightWing_Left: $leftWing_Width; 
+$wrapper_BorderRadius: 10px;
+$header_Height: 8%;
+$body_Height: 100% - $header_Height;
+
+.home {
+
+	@import url(https://fonts.googleapis.com/css?family=Nunito:400,700,300);
+
+	background: $mainColor;
+	font-family: 'Nunito', sans-serif;
+
+	.wrapper {
+		position: absolute;
+		left: 8.5%;
+		top: 5%;
+		width: 85%;
+		height: 90%;
+		box-shadow: 0 0 20px #111;
+		border-radius: $wrapper_BorderRadius;
+	}
+
+	.left-wing {
+		position: absolute;
+		width: $leftWing_Width;
+		height: 100%;		
+		border-radius: $wrapper_BorderRadius 0 0 $wrapper_BorderRadius;
+		background: $wingColor;
+	}
+
+	.right-wing {
+		position: absolute;
+		width: $rightWing_Width;
+		height: 100%;
+		left: $rightWing_Left;
+		border-radius: 0 $wrapper_BorderRadius $wrapper_BorderRadius 0;
+		background: $wingColor;
+	}
+
+	.header {
+		position: absolute;
+		width: 100%;
+		height: $header_Height;
+		background: $headerColor;
+	}
+
+	.left {
+		border-radius: $wrapper_BorderRadius 0 0 0;
+	}
+
+	.right {
+		border-radius: 0 $wrapper_BorderRadius 0 0;
+	}
+
+	.body {
+		position: absolute;
+		top: $header_Height;
+		width: 100%;
+		height: $body_Height;
+	}
+
+	.chats {
+		background: #aaa;
+	}
+
+	.chat {
+		background: #bbb;
+		overflow-x: hidden;
+		overflow-y: scroll;
+		height: 84%;
+	}
+
+	.message {
+		display: inline-block;
+		clear: both;
+		max-width: 90%;
+		padding: 20px;
+		height: auto;
+		background: #fff;
+		cursor: pointer;
+		border-radius: 5px;
+		margin: 10px;
+
+		&.left {
+			float: left;
+
+			.sender {
+				color: #f00;
+			}
+
+		}
+
+		&.right {
+			float: right;
+
+			.sender {
+				color: #00f;
+			}
+		}
+	}
+
+	.mbody {
+		word-break: break-all;
+	}
+
+	.input-area {
+		position: absolute;
+		width: 100%;
+		height: $header_Height;
+		bottom: 0;
+		background: $headerColor;
+
+		input[type='text'] {
+			font-family: 'Nunito', sans-serif;
+			position: absolute;
+			font-size: 1.3em;
+			left: 2%;
+			width: 90%;
+			height: 90%;
+			border: none;
+			outline: none;
+			word-wrap: break-word;
+			word-break: break-word;
+		}
+
+	}
+
+}
